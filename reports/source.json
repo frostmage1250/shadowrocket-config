@@ -1,0 +1,221 @@
+{
+  "approximations": [
+    "Mihomo IPv4/IPv6-preferred DIRECT pseudo-proxies become DIRECT.",
+    "Mihomo DNS rule-set policies become Shadowrocket global/direct/node DNS settings.",
+    "Mihomo fake-ip-filter providers use Shadowrocket native Fake-IP behavior.",
+    "Mihomo hosts arrays use the first reviewed address per DoH hostname.",
+    "Node filtering and region grouping use Shadowrocket policy-regex-filter."
+  ],
+  "configuration_sha256": "fb319eefdc897c48da100250913e98bde2888b5636abd7df0f29cd1de9f0686e",
+  "group_filters": {
+    "低倍率节点": "^(?!.*(?:(?i)🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong|(?i)群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b))(?=.*(?:(?i)^(?!.*(?:剩|期)).*(?:(?<!\\d)0\\.[0-5]|(?<=[ \\[\\(|｜丨∣┃\\-‐–—−－﹣])0[*×✕✖⨯⨉x倍])|(?:(?<=[ \\[\\(|｜丨∣┃\\-‐–—−－﹣])[*×✕✖⨯⨉x]0(?=[ \\)\\]]|倍|$))|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z]))).*$",
+    "其他节点": "^(?!.*(?:(?i)🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong|(?i)群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b|(?i)🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan|(?i)🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|圣地亚哥|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\\s*states|(?i)🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore|(?i)🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan)).*$",
+    "台湾": "^(?!.*(?:(?i)🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong|(?i)群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b))(?=.*(?:(?i)🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan)).*$",
+    "新加坡": "^(?!.*(?:(?i)🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong|(?i)群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b))(?=.*(?:(?i)🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore)).*$",
+    "日本": "^(?!.*(?:(?i)🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong|(?i)群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b))(?=.*(?:(?i)🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan)).*$",
+    "美国": "^(?!.*(?:(?i)🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong|(?i)群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b))(?=.*(?:(?i)🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|圣地亚哥|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\\s*states)).*$",
+    "订阅": "^(?!.*(?:(?i)🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong|(?i)群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b)).*$"
+  },
+  "mihomo_script_commit": "194b80299749846e1717363b530d17df863de045",
+  "non_portable_providers": {
+    "fakeip_filter": "Handled by Shadowrocket native behavior"
+  },
+  "policy_groups": 16,
+  "providers_used": [
+    {
+      "behavior": "domain",
+      "output": "private",
+      "provider": "private",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/private.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "games-cn",
+      "provider": "games_cn",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/games-cn.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "steam",
+      "provider": "steam",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/steam.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "steam-ip",
+      "provider": "steam_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/steam-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "apple-cn",
+      "provider": "apple_cn",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/apple-cn.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "apple",
+      "provider": "apple",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/apple.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "apple-ip",
+      "provider": "apple_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/apple-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "microsoft-cn",
+      "provider": "microsoft_cn",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/microsoft-cn.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "github",
+      "provider": "github",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/github.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "microsoft",
+      "provider": "microsoft",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/microsoft.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "microsoft-ip",
+      "provider": "microsoft_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/microsoft-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "telegram",
+      "provider": "telegram",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/telegram.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "telegram-ip",
+      "provider": "telegram_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/telegram-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "youtube",
+      "provider": "youtube",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/youtube.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "threads",
+      "provider": "threads",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/threads.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "instagram",
+      "provider": "instagram",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/instagram.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "facebook",
+      "provider": "facebook",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/facebook.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "facebook-ip",
+      "provider": "facebook_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/facebook-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "twitter",
+      "provider": "twitter",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/twitter.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "twitter-ip",
+      "provider": "twitter_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/twitter-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "twitch",
+      "provider": "twitch",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/twitch.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "tiktok",
+      "provider": "tiktok",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/tiktok.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "tiktok-ip",
+      "provider": "tiktok_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/tiktok-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "google",
+      "provider": "google",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/google.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "google-ip",
+      "provider": "google_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/google-ip.list"
+    },
+    {
+      "behavior": "domain",
+      "output": "ai",
+      "provider": "ai",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/ai.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "pikpak",
+      "provider": "pikpak",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/pikpak.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "ehentai",
+      "provider": "ehentai",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/ehentai.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "geolocation-non-cn",
+      "provider": "geolocation-!cn",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/geolocation-non-cn.domain-set"
+    },
+    {
+      "behavior": "domain",
+      "output": "geolocation-cn",
+      "provider": "geolocation-cn",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/geolocation-cn.domain-set"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "cn-ip",
+      "provider": "cn_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/cn-ip.list"
+    },
+    {
+      "behavior": "ipcidr",
+      "output": "private-ip",
+      "provider": "private_ip",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/shadowrocket/private-ip.list"
+    }
+  ],
+  "proxy_rules_converter_commit": "54a7aa32d0af7e1db53a8dfa0d0e6892a77a5d92",
+  "rules": 33,
+  "schema_version": 1
+}
