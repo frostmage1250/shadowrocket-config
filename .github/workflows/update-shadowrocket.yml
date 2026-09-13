@@ -1,0 +1,75 @@
+name: Update Shadowrocket configuration
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/update-shadowrocket.yml"
+      - "src/**"
+      - "tests/**"
+  schedule:
+    # 18:53 UTC = 02:53 Asia/Taipei (the following day).
+    - cron: "53 18 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-shadowrocket-configuration
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Resolve immutable upstream revisions
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mihomo_commit="$(gh api repos/frostmage1250/mihomo-script/commits/main --jq .sha)"
+          converter_commit="$(gh api repos/frostmage1250/proxy-rules-converter/commits/main --jq .sha)"
+          echo "MIHOMO_COMMIT=${mihomo_commit}" >> "${GITHUB_ENV}"
+          echo "CONVERTER_COMMIT=${converter_commit}" >> "${GITHUB_ENV}"
+          curl --fail --location --silent --show-error             "https://raw.githubusercontent.com/frostmage1250/mihomo-script/${mihomo_commit}/mihomoScript.js"             --output "${RUNNER_TEMP}/mihomoScript.js"
+          curl --fail --location --silent --show-error             "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/${converter_commit}/config/sources.json"             --output "${RUNNER_TEMP}/converter-sources.json"
+
+      - name: Extract the Mihomo configuration model
+        run: |
+          node src/extract_mihomo_model.js             "${RUNNER_TEMP}/mihomoScript.js"             > "${RUNNER_TEMP}/mihomo-model.json"
+
+      - name: Generate and remotely validate
+        run: |
+          python src/build_shadowrocket.py             --model "${RUNNER_TEMP}/mihomo-model.json"             --converter-sources "${RUNNER_TEMP}/converter-sources.json"             --mihomo-commit "${MIHOMO_COMMIT}"             --converter-commit "${CONVERTER_COMMIT}"             --validate-remote
+
+      - name: Run builder tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Verify deterministic regeneration
+        run: |
+          python src/build_shadowrocket.py             --model "${RUNNER_TEMP}/mihomo-model.json"             --converter-sources "${RUNNER_TEMP}/converter-sources.json"             --mihomo-commit "${MIHOMO_COMMIT}"             --converter-commit "${CONVERTER_COMMIT}"             --validate-remote             --check
+          git diff --check
+
+      - name: Commit safe generated changes
+        shell: bash
+        run: |
+          git add -- shadowrocket.conf reports/source.json
+          if git diff --cached --quiet; then
+            echo "No generated configuration changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: update generated Shadowrocket configuration"
+          git push
