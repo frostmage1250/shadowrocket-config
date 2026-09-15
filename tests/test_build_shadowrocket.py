@@ -28,6 +28,8 @@ class ShadowrocketBuilderTests(unittest.TestCase):
                 "fakeip_filter": {"behavior": "domain"},
             },
             "rules": [
+                "DOMAIN-SUFFIX,qwen.ai,Direct",
+                "DOMAIN-SUFFIX,qwenlm.ai,Direct",
                 "RULE-SET,domain,Proxy",
                 "RULE-SET,ip,Direct,no-resolve",
                 "MATCH,Final",
@@ -79,6 +81,7 @@ class ShadowrocketBuilderTests(unittest.TestCase):
             ],
         )
         self.assertEqual(len(used), 2)
+        self.assertFalse(any("qwen" in rule.lower() for rule in rules))
 
     def test_groups_remove_mihomo_only_direct_pseudo_proxies(self):
         model, _ = self.fixture()

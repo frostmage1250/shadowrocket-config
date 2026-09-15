@@ -25,6 +25,7 @@ SELF_URL = (
     "shadowrocket-config/main/shadowrocket.conf"
 )
 BUILTIN_POLICIES = {"DIRECT", "PROXY", "REJECT"}
+EXCLUDED_DOMAIN_SUFFIXES = {"qwen.ai", "qwenlm.ai"}
 FLOWER_NODE_HOSTS = {
     "11612bj3-b76c.aws-agent.biz": "06996bj6-79x5.apt-agent.com",
     "b76c5sh0-fde6.aws-agent.biz": "08233sh6-12d1.apt-agent.com",
@@ -108,6 +109,12 @@ def render_rules(
     used: list[dict[str, str]] = []
     for rule in model["rules"]:
         parts = rule.split(",")
+        if (
+            parts[0] == "DOMAIN-SUFFIX"
+            and len(parts) >= 3
+            and parts[1].lower() in EXCLUDED_DOMAIN_SUFFIXES
+        ):
+            continue
         if parts[0] == "MATCH" and len(parts) == 2:
             rendered.append(f"FINAL,{parts[1]}")
             continue
