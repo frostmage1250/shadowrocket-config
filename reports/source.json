@@ -1,6 +1,7 @@
 {
   "approximations": [
     "Mihomo IPv4/IPv6-preferred DIRECT pseudo-proxies become DIRECT.",
+    "Mihomo nameserver dynamically becomes Shadowrocket dns-server.",
     "Mihomo proxy-server-nameserver dynamically becomes Shadowrocket proxy-dns-server.",
     "Mihomo fake-ip-filter providers use Shadowrocket native Fake-IP behavior.",
     "Mihomo hosts use the first address per hostname; Flower node aliases are preserved.",
