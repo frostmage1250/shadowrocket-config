@@ -31,6 +31,14 @@ FLOWER_NODE_HOSTS = {
     "b76c5sh0-fde6.aws-agent.biz": "08233sh6-12d1.apt-agent.com",
     "fde63gz6-1y61.aws-agent.biz": "09571gz6-86k1.apt-agent.com",
 }
+MESL_PRIVATE_NODE_DNS = (
+    "https://zone.rlose.com:39933/api-query",
+    "https://radar.rlose.com/api-query",
+)
+MESL_NODE_DOMAINS = (
+    "cl-188.911-gt2-rs.com",
+    "cl-199.911-gt2-rs.com",
+)
 
 
 class BuildError(RuntimeError):
@@ -191,20 +199,9 @@ def render_general_dns(model: dict[str, Any]) -> str:
     return ",".join(rendered)
 
 
-def render_node_dns(model: dict[str, Any]) -> str:
-    values = model.get("dns", {}).get("proxy-server-nameserver")
-    if not isinstance(values, list) or not values:
-        raise BuildError("Mihomo proxy-server-nameserver is missing or empty")
-    rendered = []
-    for value in values:
-        if not isinstance(value, str) or not value.strip():
-            raise BuildError("Invalid Mihomo proxy-server-nameserver entry")
-        dns = translate_mihomo_dns_policy(value.strip())
-        if dns and dns not in rendered:
-            rendered.append(dns)
-    if not rendered:
-        raise BuildError("Mihomo proxy-server-nameserver produced no Shadowrocket DNS entries")
-    return ",".join(rendered)
+def render_node_dns(_model: dict[str, Any]) -> str:
+    """Use the provider-private DoH endpoints required by the MESL node domains."""
+    return ",".join(MESL_PRIVATE_NODE_DNS)
 
 
 def render_hosts(model: dict[str, Any]) -> list[str]:
@@ -285,6 +282,7 @@ def validate_config(config: str) -> None:
         "dns-direct-fallback-proxy = false",
         "use-local-host-item-for-proxy = true",
         "hijack-dns = *:53",
+        f"proxy-dns-server = {','.join(MESL_PRIVATE_NODE_DNS)}",
         *(f"{hostname} = {target}" for hostname, target in FLOWER_NODE_HOSTS.items()),
     }
     config_lines = set(config.splitlines())
@@ -378,11 +376,16 @@ def main() -> int:
             "approximations": [
                 "Mihomo IPv4/IPv6-preferred DIRECT pseudo-proxies become DIRECT.",
                 "Mihomo nameserver dynamically becomes Shadowrocket dns-server.",
-                "Mihomo proxy-server-nameserver dynamically becomes Shadowrocket proxy-dns-server.",
+                "MESL private DoH is pinned as Shadowrocket proxy-dns-server for node resolution.",
                 "Mihomo fake-ip-filter providers use Shadowrocket native Fake-IP behavior.",
                 "Mihomo hosts use the first address per hostname; Flower node aliases are preserved.",
                 "Node filtering and region grouping use Shadowrocket policy-regex-filter.",
             ],
+            "provider_node_resolution": {
+                "flower_hosts": FLOWER_NODE_HOSTS,
+                "mesl_private_dns": list(MESL_PRIVATE_NODE_DNS),
+                "mesl_node_domains": list(MESL_NODE_DOMAINS),
+            },
             "group_filters": group_filters,
         }
         report = json.dumps(report_data, ensure_ascii=False, indent=2, sort_keys=True) + "\n"

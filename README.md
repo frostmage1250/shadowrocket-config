@@ -41,8 +41,10 @@ Non-identical client behavior is explicit and conservative:
 - Node filtering and region/rate grouping use Shadowrocket
   `policy-regex-filter` with the regexes extracted from the Mihomo script.
 - `IPv4优先` and `IPv6优先` Mihomo DIRECT pseudo-proxies become `DIRECT`.
-- Foreign DoH uses the `Proxy` group; direct requests use system DNS; node domains
-  use the configured China DoH servers.
+- Foreign DoH uses the `Proxy` group; direct requests use system DNS without
+  system-DNS fallback; node domains use the two MESL private DoH endpoints.
+- The three Flower node aliases are pinned in `[Host]` and
+  `use-local-host-item-for-proxy = true` applies them to proxy-node resolution.
 - Mihomo rule-set DNS policies and `fakeip_filter` have no exact Shadowrocket
   representation and use native Shadowrocket DNS/Fake-IP behavior.
 - The two Mihomo DoH host arrays are represented by their first reviewed address.

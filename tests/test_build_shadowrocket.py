@@ -114,7 +114,8 @@ class ShadowrocketBuilderTests(unittest.TestCase):
             config,
         )
         self.assertIn(
-            "proxy-dns-server = 114.114.114.114,tls://223.5.5.5,https://doh.pub/dns-query",
+            "proxy-dns-server = https://zone.rlose.com:39933/api-query,"
+            "https://radar.rlose.com/api-query",
             config,
         )
         self.assertIn("direct-dns-server = system", config)
