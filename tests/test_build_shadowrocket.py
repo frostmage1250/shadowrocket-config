@@ -53,6 +53,10 @@ class ShadowrocketBuilderTests(unittest.TestCase):
             "excludeFilter": {"source": "traffic|到期", "flags": "iu"},
             "options": {"过滤非地区节点": True, "过滤低倍率节点": False},
             "dns": {
+                "nameserver": [
+                    "https://cloudflare-dns.com/dns-query#Proxy",
+                    "https://dns.google/dns-query#Proxy",
+                ],
                 "proxy-server-nameserver": [
                     "114.114.114.114#DIRECT",
                     "tls://223.5.5.5#DIRECT",
@@ -104,6 +108,11 @@ class ShadowrocketBuilderTests(unittest.TestCase):
             model,
         )
         validate_config(config)
+        self.assertIn(
+            "dns-server = https://cloudflare-dns.com/dns-query#proxy=Proxy,"
+            "https://dns.google/dns-query#proxy=Proxy",
+            config,
+        )
         self.assertIn(
             "proxy-dns-server = 114.114.114.114,tls://223.5.5.5,https://doh.pub/dns-query",
             config,
