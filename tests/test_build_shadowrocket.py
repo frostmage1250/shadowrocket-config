@@ -121,6 +121,8 @@ class ShadowrocketBuilderTests(unittest.TestCase):
         self.assertIn("dns-fallback-system = false", config)
         self.assertNotIn("fallback-dns-server = system", config)
         self.assertNotIn("dns-direct-system = true", config)
+        self.assertIn("hijack-dns = *:53", config)
+        self.assertNotIn("hijack-dns = 8.8.8.8:53,8.8.4.4:53", config)
         for hostname, target in {
             "11612bj3-b76c.aws-agent.biz": "06996bj6-79x5.apt-agent.com",
             "b76c5sh0-fde6.aws-agent.biz": "08233sh6-12d1.apt-agent.com",

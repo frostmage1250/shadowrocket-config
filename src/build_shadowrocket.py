@@ -242,7 +242,7 @@ def render_config(
         f"proxy-dns-server = {node_dns}",
         "private-ip-answer = true",
         "use-local-host-item-for-proxy = true",
-        "hijack-dns = 8.8.8.8:53,8.8.4.4:53",
+        "hijack-dns = *:53",
         "block-quic = always-allow",
         "",
         "[Proxy]",
@@ -284,6 +284,7 @@ def validate_config(config: str) -> None:
         "dns-fallback-system = false",
         "dns-direct-fallback-proxy = false",
         "use-local-host-item-for-proxy = true",
+        "hijack-dns = *:53",
         *(f"{hostname} = {target}" for hostname, target in FLOWER_NODE_HOSTS.items()),
     }
     config_lines = set(config.splitlines())
