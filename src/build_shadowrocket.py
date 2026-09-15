@@ -25,6 +25,11 @@ SELF_URL = (
     "shadowrocket-config/main/shadowrocket.conf"
 )
 BUILTIN_POLICIES = {"DIRECT", "PROXY", "REJECT"}
+FLOWER_NODE_HOSTS = {
+    "11612bj3-b76c.aws-agent.biz": "06996bj6-79x5.apt-agent.com",
+    "b76c5sh0-fde6.aws-agent.biz": "08233sh6-12d1.apt-agent.com",
+    "fde63gz6-1y61.aws-agent.biz": "09571gz6-86k1.apt-agent.com",
+}
 
 
 class BuildError(RuntimeError):
@@ -154,7 +159,51 @@ def validate_model(
         raise BuildError("fakeip_filter must remain explicitly non-portable")
 
 
-def render_config(group_lines: list[str], rule_lines: list[str]) -> str:
+def strip_mihomo_dns_policy(value: str) -> str:
+    base, marker, policy = value.rpartition("#")
+    if marker and policy.upper() == "DIRECT":
+        return base
+    return value
+
+
+def render_node_dns(model: dict[str, Any]) -> str:
+    values = model.get("dns", {}).get("proxy-server-nameserver")
+    if not isinstance(values, list) or not values:
+        raise BuildError("Mihomo proxy-server-nameserver is missing or empty")
+    rendered = []
+    for value in values:
+        if not isinstance(value, str) or not value.strip():
+            raise BuildError("Invalid Mihomo proxy-server-nameserver entry")
+        dns = strip_mihomo_dns_policy(value.strip())
+        if dns and dns not in rendered:
+            rendered.append(dns)
+    if not rendered:
+        raise BuildError("Mihomo proxy-server-nameserver produced no Shadowrocket DNS entries")
+    return ",".join(rendered)
+
+
+def render_hosts(model: dict[str, Any]) -> list[str]:
+    source = model.get("hosts")
+    if not isinstance(source, dict):
+        raise BuildError("Mihomo hosts configuration is missing")
+    rendered: dict[str, str] = {}
+    for hostname, value in source.items():
+        candidates = value if isinstance(value, list) else [value]
+        address = next(
+            (item.strip() for item in candidates if isinstance(item, str) and item.strip()),
+            None,
+        )
+        if address is not None:
+            rendered[str(hostname)] = address
+    rendered.update(FLOWER_NODE_HOSTS)
+    return [f"{hostname} = {address}" for hostname, address in rendered.items()]
+
+
+def render_config(
+    group_lines: list[str], rule_lines: list[str], model: dict[str, Any]
+) -> str:
+    node_dns = render_node_dns(model)
+    host_lines = render_hosts(model)
     lines = [
         "# Generated from frostmage1250/mihomo-script. Do not edit by hand.",
         "[General]",
@@ -162,10 +211,9 @@ def render_config(group_lines: list[str], rule_lines: list[str]) -> str:
         "ipv6 = true",
         "dns-server = https://cloudflare-dns.com/dns-query#proxy=Proxy,https://dns.google/dns-query#proxy=Proxy",
         "direct-dns-server = system",
-        "fallback-dns-server = system",
-        "proxy-dns-server = https://223.5.5.5/dns-query,https://1.12.12.12/dns-query",
-        "dns-direct-system = true",
+        "dns-fallback-system = false",
         "dns-direct-fallback-proxy = false",
+        f"proxy-dns-server = {node_dns}",
         "private-ip-answer = true",
         "use-local-host-item-for-proxy = true",
         "hijack-dns = 8.8.8.8:53,8.8.4.4:53",
@@ -181,8 +229,7 @@ def render_config(group_lines: list[str], rule_lines: list[str]) -> str:
         *rule_lines,
         "",
         "[Host]",
-        "cloudflare-dns.com = 1.1.1.1",
-        "dns.google = 8.8.8.8",
+        *host_lines,
         "",
     ]
     return "\n".join(lines)
@@ -206,8 +253,23 @@ def validate_config(config: str) -> None:
         policy = line.split(",")[-2] if line.endswith(",no-resolve") else line.split(",")[-1]
         if policy not in groups | BUILTIN_POLICIES:
             raise BuildError(f"Rule references undefined policy {policy}: {line}")
-    if not config.rstrip().endswith("dns.google = 8.8.8.8"):
-        raise BuildError("Generated configuration is incomplete")
+    required = {
+        "direct-dns-server = system",
+        "dns-fallback-system = false",
+        "dns-direct-fallback-proxy = false",
+        "use-local-host-item-for-proxy = true",
+        *(f"{hostname} = {target}" for hostname, target in FLOWER_NODE_HOSTS.items()),
+    }
+    config_lines = set(config.splitlines())
+    missing = sorted(required - config_lines)
+    if missing:
+        raise BuildError(f"Generated configuration is missing required DNS/Host lines: {missing}")
+    forbidden = {"fallback-dns-server = system", "dns-direct-system = true"}
+    present_forbidden = sorted(forbidden & config_lines)
+    if present_forbidden:
+        raise BuildError(f"Generated configuration enables forbidden DNS fallback: {present_forbidden}")
+    if sum(line.startswith("proxy-dns-server = ") for line in config.splitlines()) != 1:
+        raise BuildError("Generated configuration must contain exactly one proxy-dns-server line")
 
 
 def validate_remote(used: list[dict[str, str]]) -> None:
@@ -267,7 +329,7 @@ def main() -> int:
         validate_model(model, mapping)
         groups, group_filters = render_groups(model)
         rules, used = render_rules(model, mapping)
-        config = render_config(groups, rules)
+        config = render_config(groups, rules, model)
         validate_config(config)
         if args.validate_remote:
             validate_remote(used)
@@ -286,9 +348,9 @@ def main() -> int:
             },
             "approximations": [
                 "Mihomo IPv4/IPv6-preferred DIRECT pseudo-proxies become DIRECT.",
-                "Mihomo DNS rule-set policies become Shadowrocket global/direct/node DNS settings.",
+                "Mihomo proxy-server-nameserver dynamically becomes Shadowrocket proxy-dns-server.",
                 "Mihomo fake-ip-filter providers use Shadowrocket native Fake-IP behavior.",
-                "Mihomo hosts arrays use the first reviewed address per DoH hostname.",
+                "Mihomo hosts use the first address per hostname; Flower node aliases are preserved.",
                 "Node filtering and region grouping use Shadowrocket policy-regex-filter.",
             ],
             "group_filters": group_filters,

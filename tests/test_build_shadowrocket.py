@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from build_shadowrocket import (  # noqa: E402
     BuildError,
+    render_config,
     render_groups,
     render_rules,
     validate_config,
@@ -49,6 +50,18 @@ class ShadowrocketBuilderTests(unittest.TestCase):
             ],
             "excludeFilter": {"source": "traffic|到期", "flags": "iu"},
             "options": {"过滤非地区节点": True, "过滤低倍率节点": False},
+            "dns": {
+                "proxy-server-nameserver": [
+                    "114.114.114.114#DIRECT",
+                    "tls://223.5.5.5#DIRECT",
+                    "https://doh.pub/dns-query#DIRECT",
+                ]
+            },
+            "hosts": {
+                "doh.pub": ["1.12.12.12", "120.53.53.53"],
+                "cloudflare-dns.com": ["1.1.1.1", "1.0.0.1"],
+                "dns.google": ["8.8.8.8", "8.8.4.4"],
+            },
         }
         mapping = {"domain": "domain", "ip": "ip", "fakeip_filter": None}
         return model, mapping
@@ -81,18 +94,27 @@ class ShadowrocketBuilderTests(unittest.TestCase):
             render_rules(model, mapping)
 
     def test_config_policy_validation(self):
-        valid = """[General]
-ipv6 = true
-[Proxy]
-[Proxy Group]
-Proxy = select,DIRECT
-Final = select,Proxy,DIRECT
-[Rule]
-FINAL,Final
-[Host]
-dns.google = 8.8.8.8
-"""
-        validate_config(valid)
+        model, _ = self.fixture()
+        config = render_config(
+            ["Proxy = select,DIRECT", "Final = select,Proxy,DIRECT"],
+            ["FINAL,Final"],
+            model,
+        )
+        validate_config(config)
+        self.assertIn(
+            "proxy-dns-server = 114.114.114.114,tls://223.5.5.5,https://doh.pub/dns-query",
+            config,
+        )
+        self.assertIn("direct-dns-server = system", config)
+        self.assertIn("dns-fallback-system = false", config)
+        self.assertNotIn("fallback-dns-server = system", config)
+        self.assertNotIn("dns-direct-system = true", config)
+        for hostname, target in {
+            "11612bj3-b76c.aws-agent.biz": "06996bj6-79x5.apt-agent.com",
+            "b76c5sh0-fde6.aws-agent.biz": "08233sh6-12d1.apt-agent.com",
+            "fde63gz6-1y61.aws-agent.biz": "09571gz6-86k1.apt-agent.com",
+        }.items():
+            self.assertIn(f"{hostname} = {target}", config)
 
 
 if __name__ == "__main__":

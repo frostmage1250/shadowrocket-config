@@ -11,6 +11,7 @@ if (process.argv.length !== 3) {
 const source = fs.readFileSync(process.argv[2], "utf8");
 const exportCode = [
   "",
+  ";const __shadowrocketDnsAndHosts = buildDnsAndHostsConfig({dns: {}, hosts: {}}, []);",
   ";globalThis.__shadowrocketModel = {",
   "  providers: buildRuleProviders(),",
   "  rules: buildRules(),",
@@ -26,6 +27,8 @@ const exportCode = [
   "  rateRegions: rateRegionDefinitions.map(({name, regex}) => ({name, source: regex.source, flags: regex.flags})),",
   "  excludeFilter: {source: excludeFilter.source, flags: excludeFilter.flags},",
   "  options: ruleOptionsEnable,",
+  "  dns: __shadowrocketDnsAndHosts.dns,",
+  "  hosts: __shadowrocketDnsAndHosts.hosts,",
   "};",
 ].join("\n");
 
